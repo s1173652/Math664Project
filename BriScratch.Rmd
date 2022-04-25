@@ -1,0 +1,485 @@
+---
+title: "Math 664 Project"
+output: html_notebook
+---
+
+```{r, message=FALSE}
+library(readr)
+library(ggplot2)
+library(mosaic)
+library(dplyr)
+library(mosaicCore)
+library(RColorBrewer)
+HateCrimes <- read_csv("NYPD_Hate_Crimes.csv")
+```
+
+## What Assaults are most common among each Bias/Borough Group?
+### Bias
+```{r}
+bias <- as.vector(HateCrimes$`Bias Motive Description`) 
+
+bias <- as.matrix(table(bias))
+bias
+```
+
+```{r}
+mypalette<-brewer.pal(7,"BuGn") 
+
+barchart(bias, main = "Bar Chart of Bias" , col = mypalette)
+```
+
+```{r}
+sixtyyrs <- HateCrimes %>% filter(`Bias Motive Description` == "60 YRS AND OLDER")
+anti_arab <- HateCrimes %>% filter(`Bias Motive Description` == "ANTI-ARAB")
+anti_asain <- HateCrimes %>% filter(`Bias Motive Description` == "ANTI-ASIAN")
+anti_black <- HateCrimes %>% filter(`Bias Motive Description` == "ANTI-BLACK")
+anti_buddhist <- HateCrimes %>% filter(`Bias Motive Description` == "ANTI-BUDDHIST")
+anti_catholic <- HateCrimes %>% filter(`Bias Motive Description` == "ANTI-CATHOLIC")
+anti_female <- HateCrimes %>% filter(`Bias Motive Description` == "ANTI-FEMALE")
+anti_lesbian <- HateCrimes %>% filter(`Bias Motive Description` == "ANTI-FEMALE HOMOSEXUAL (LESBIAN)")
+anti_gendernonconforming <- HateCrimes %>% filter(`Bias Motive Description` == "ANTI-GENDER NON-CONFORMING")
+anti_hindu <- HateCrimes %>% filter(`Bias Motive Description` == "ANTI-HINDU")
+anti_hispanic <- HateCrimes %>% filter(`Bias Motive Description` == "ANTI-HISPANIC")
+anti_jehovas<- HateCrimes %>% filter(`Bias Motive Description` == "ANTI-JEHOVAHS WITNESS")
+anti_jewish <- HateCrimes %>% filter(`Bias Motive Description` == "ANTI-JEWISH")
+anti_lgbt <- HateCrimes %>% filter(`Bias Motive Description` == "ANTI-LGBT (MIXED GROUP)")
+anti_gay <- HateCrimes %>% filter(`Bias Motive Description` == "ANTI-MALE HOMOSEXUAL (GAY)")
+anti_multiracial <- HateCrimes %>% filter(`Bias Motive Description` == "ANTI-MULTI-RACIAL GROUPS")
+anti_muslim <- HateCrimes %>% filter(`Bias Motive Description` == "ANTI-MUSLIM")
+anti_otherethnicity <- HateCrimes %>% filter(`Bias Motive Description` == "ANTI-OTHER ETHNICITY")
+anti_otherreligion <- HateCrimes %>% filter(`Bias Motive Description` == "ANTI-OTHER RELIGION")
+anti_physicaldis <- HateCrimes %>% filter(`Bias Motive Description` == "ANTI-PHYSICAL DISABILITY")
+anti_religion <- HateCrimes %>% filter(`Bias Motive Description` == "ANTI-RELIGIOUS PRACTICE GENERALLY")
+anti_trans <- HateCrimes %>% filter(`Bias Motive Description` == "ANTI-TRANSGENDER")
+anti_white <- HateCrimes %>% filter(`Bias Motive Description` == "ANTI-WHITE")
+```
+
+#### 60 Yrs
+```{r}
+assaults_60yrs <- as.vector(sixtyyrs$`Offense Description`) 
+
+assaults_60yrs <- as.matrix(table(assaults_60yrs))
+assaults_60yrs
+```
+
+#### Anti-Arab
+```{r}
+assaults_anti_arab <- as.vector(anti_arab$`Offense Description`) 
+
+assaults_anti_arab <- as.matrix(table(assaults_anti_arab))
+assaults_anti_arab
+
+barchart(assaults_anti_arab, main = "Bar Chart of Assaults with Anti-Arab Bias" , col = mypalette)
+```
+
+#### Anti-Asain
+```{r}
+assaults_anti_asain <- as.vector(anti_asain$`Offense Description`) 
+
+assaults_anti_asain<- as.matrix(table(assaults_anti_asain))
+assaults_anti_asain
+
+barchart(assaults_anti_asain, main = "Bar Chart of Assaults with Anti-Asain Bias" , col = mypalette)
+```
+
+#### Anti-Black
+```{r}
+assaults_anti_black <- as.vector(anti_black$`Offense Description`) 
+
+assaults_anti_black<- as.matrix(table(assaults_anti_black))
+assaults_anti_black
+
+barchart(assaults_anti_black, main = "Bar Chart of Assaults with Anti-Black Bias" , col = mypalette)
+```
+
+#### Anti-Buddhist
+```{r}
+assaults_anti_buddhist <- as.vector(anti_buddhist$`Offense Description`) 
+
+assaults_anti_buddhist<- as.matrix(table(assaults_anti_buddhist))
+assaults_anti_buddhist
+
+barchart(assaults_anti_buddhist, main = "Bar Chart of Assaults with Anti_Buddhist Bias" , col = mypalette)
+```
+
+#### Anti-Catholic
+```{r}
+assaults_anti_catholic <- as.vector(anti_catholic$`Offense Description`) 
+
+assaults_anti_catholic<- as.matrix(table(assaults_anti_catholic))
+assaults_anti_catholic
+
+barchart(assaults_anti_catholic, main = "Bar Chart of Assaults with Anti-Catholic Bias" , col = mypalette)
+```
+
+#### Anti-Female
+```{r}
+assaults_anti_female <- as.vector(anti_female$`Offense Description`) 
+
+assaults_anti_female<- as.matrix(table(assaults_anti_female))
+assaults_anti_female
+
+barchart(assaults_anti_female, main = "Bar Chart of Assaults with Anti-Female Bias" , col = mypalette)
+```
+
+#### Anti-Lesbian
+```{r}
+assaults_anti_lesbian <- as.vector(anti_lesbian$`Offense Description`) 
+
+assaults_anti_lesbian<- as.matrix(table(assaults_anti_lesbian))
+assaults_anti_lesbian
+
+barchart(assaults_anti_lesbian, main = "Bar Chart of Assaults with Anti-Lesbian Bias" , col = mypalette)
+```
+
+#### Anti-Gender Non-Conforming
+```{r}
+assaults_anti_gendernonconforming <- as.vector(anti_gendernonconforming$`Offense Description`) 
+
+assaults_anti_gendernonconforming<- as.matrix(table(assaults_anti_gendernonconforming))
+assaults_anti_gendernonconforming
+
+barchart(assaults_anti_gendernonconforming, main = "Bar Chart of Assaults with Anti-Gender Non-Conforming Bias" , col = mypalette)
+```
+
+#### Anti-Hindu
+```{r}
+assaults_anti_hindu <- as.vector(anti_hindu$`Offense Description`) 
+
+assaults_anti_hindu<- as.matrix(table(assaults_anti_hindu))
+assaults_anti_hindu
+
+barchart(assaults_anti_hindu, main = "Bar Chart of Assaults with Anti-Hindu Bias" , col = mypalette)
+```
+
+#### Anti-Hispanic
+```{r}
+assaults_anti_hispanic <- as.vector(anti_hispanic$`Offense Description`) 
+
+assaults_anti_hispanic<- as.matrix(table(assaults_anti_hispanic))
+assaults_anti_hispanic
+
+barchart(assaults_anti_hispanic, main = "Bar Chart of Assaults with Anti-Hispanic Bias" , col = mypalette)
+```
+
+#### Anti-Jehovas Witnesses
+```{r}
+assaults_anti_jehovas <- as.vector(anti_jehovas$`Offense Description`) 
+
+assaults_anti_jehovas<- as.matrix(table(assaults_anti_jehovas))
+assaults_anti_jehovas
+
+barchart(assaults_anti_jehovas, main = "Bar Chart of Assaults with Anti-Jehovas Witnesses Bias" , col = mypalette)
+```
+
+#### Anti-Jewish
+```{r}
+assaults_anti_jewish <- as.vector(anti_jewish$`Offense Description`) 
+
+assaults_anti_jewish<- as.matrix(table(assaults_anti_jewish))
+assaults_anti_jewish
+
+barchart(assaults_anti_jewish, main = "Bar Chart of Assaults with Anti-Jewish Bias" , col = mypalette)
+```
+
+#### Anti-LGBT
+```{r}
+assaults_anti_lgbt <- as.vector(anti_lgbt$`Offense Description`) 
+
+assaults_anti_lgbt<- as.matrix(table(assaults_anti_lgbt))
+assaults_anti_lgbt
+
+barchart(assaults_anti_lgbt, main = "Bar Chart of Assaults with Anti-LGBT Bias" , col = mypalette)
+```
+
+#### Anti-Gay
+```{r}
+assaults_anti_gay <- as.vector(anti_gay$`Offense Description`) 
+
+assaults_anti_gay<- as.matrix(table(assaults_anti_gay))
+assaults_anti_gay
+
+barchart(assaults_anti_gay, main = "Bar Chart of Assaults with Anti-Gay Bias" , col = mypalette)
+```
+
+#### Anti-Multiracial Groups
+```{r}
+assaults_anti_multiracial <- as.vector(anti_multiracial$`Offense Description`) 
+
+assaults_anti_multiracial<- as.matrix(table(assaults_anti_multiracial))
+assaults_anti_multiracial
+
+barchart(assaults_anti_multiracial, main = "Bar Chart of Assaults with Anti-Multiracial Groups Bias" , col = mypalette)
+```
+
+#### Anti-Muslim
+```{r}
+assaults_anti_muslim <- as.vector(anti_muslim$`Offense Description`) 
+
+assaults_anti_muslim<- as.matrix(table(assaults_anti_muslim))
+assaults_anti_muslim
+
+barchart(assaults_anti_muslim, main = "Bar Chart of Assaults with Anti-Muslim Bias" , col = mypalette)
+```
+
+#### Anti-Other Ethnicity
+```{r}
+assaults_anti_otherethnicity <- as.vector(anti_otherethnicity$`Offense Description`) 
+
+assaults_anti_otherethnicity<- as.matrix(table(assaults_anti_otherethnicity))
+assaults_anti_otherethnicity
+
+barchart(assaults_anti_otherethnicity, main = "Bar Chart of Assaults with Anti-Other Ethnicity Bias" , col = mypalette)
+```
+
+#### Anti-Other Religion
+```{r}
+assaults_anti_otherreligion <- as.vector(anti_otherreligion$`Offense Description`) 
+
+assaults_anti_otherreligion<- as.matrix(table(assaults_anti_otherreligion))
+assaults_anti_otherreligion
+
+barchart(assaults_anti_otherreligion, main = "Bar Chart of Assaults with Anti-Other Religion Bias" , col = mypalette)
+```
+
+#### Anti-Physical Disability
+```{r}
+assaults_anti_physicaldis <- as.vector(anti_physicaldis$`Offense Description`) 
+
+assaults_anti_physicaldis<- as.matrix(table(assaults_anti_physicaldis))
+assaults_anti_physicaldis
+
+barchart(assaults_anti_physicaldis, main = "Bar Chart of Assaults with Anti-Physical Disability Bias" , col = mypalette)
+```
+
+#### Anti-Religion Practices Generally
+```{r}
+assaults_anti_religion <- as.vector(anti_religion$`Offense Description`) 
+
+assaults_anti_religion<- as.matrix(table(assaults_anti_religion))
+assaults_anti_religion
+
+barchart(assaults_anti_religion, main = "Bar Chart of Assaults with Anti-Religion Practices Generally Bias" , col = mypalette)
+```
+
+#### Anti-Transgender
+```{r}
+assaults_anti_trans <- as.vector(anti_trans$`Offense Description`) 
+
+assaults_anti_trans<- as.matrix(table(assaults_anti_trans))
+assaults_anti_trans
+
+barchart(assaults_anti_trans, main = "Bar Chart of Assaults with Anti-Transgender Bias" , col = mypalette)
+```
+
+#### Anti-White
+```{r}
+assaults_anti_white <- as.vector(anti_white$`Offense Description`) 
+
+assaults_anti_white<- as.matrix(table(assaults_anti_white))
+assaults_anti_white
+
+barchart(assaults_anti_white, main = "Bar Chart of Assaults with Anti-White Bias" , col = mypalette)
+```
+
+### Borough
+```{r}
+borough <- as.vector(HateCrimes$`Patrol Borough Name`) 
+
+borough <- as.matrix(table(borough))
+borough
+```
+
+```{r}
+mypalette<-brewer.pal(7,"BuGn") 
+
+barchart(borough, main = "Bar Chart of Borough" , col = mypalette)
+```
+
+```{r}
+bklyn_north <- HateCrimes %>% filter(`Patrol Borough Name` == "PATROL BORO BKLYN NORTH")
+bklyn_south <- HateCrimes %>% filter(`Patrol Borough Name` == "PATROL BORO BKLYN SOUTH")
+bronx <- HateCrimes %>% filter(`Patrol Borough Name` == "PATROL BORO BRONX")
+man_north <- HateCrimes %>% filter(`Patrol Borough Name` == "PATROL BORO MAN NORTH")
+man_south <- HateCrimes %>% filter(`Patrol Borough Name` == "PATROL BORO MAN SOUTH")
+queens_north <- HateCrimes %>% filter(`Patrol Borough Name` == "PATROL BORO QUEENS NORTH")
+queens_south <- HateCrimes %>% filter(`Patrol Borough Name` == "PATROL BORO QUEENS SOUTH")
+staten_island <- HateCrimes %>% filter(`Patrol Borough Name` == "PATROL BORO STATEN ISLAND")
+```
+
+#### Brooklyn North
+```{r}
+assaults_bklyn_north <- as.vector(bklyn_north$`Offense Description`) 
+
+assaults_bklyn_north<- as.matrix(table(assaults_bklyn_north))
+assaults_bklyn_north
+
+barchart(assaults_bklyn_north, main = "Bar Chart of Assaults in Brooklyn North" , col = mypalette)
+```
+
+#### Brooklyn South
+```{r}
+assaults_bklyn_south <- as.vector(bklyn_south$`Offense Description`) 
+
+assaults_bklyn_south<- as.matrix(table(assaults_bklyn_south))
+assaults_bklyn_south
+
+barchart(assaults_bklyn_south, main = "Bar Chart of Assaults in Brooklyn South" , col = mypalette)
+```
+
+#### Bronx
+```{r}
+assaults_bronx <- as.vector(bronx$`Offense Description`) 
+
+assaults_bronx<- as.matrix(table(assaults_bronx))
+assaults_bronx
+
+barchart(assaults_bronx, main = "Bar Chart of Assaults in Bronx" , col = mypalette)
+```
+
+#### Manhattan North
+```{r}
+assaults_man_north <- as.vector(man_north$`Offense Description`) 
+
+assaults_man_north<- as.matrix(table(assaults_man_north))
+assaults_man_north
+
+barchart(assaults_man_north, main = "Bar Chart of Assaults in Manhattan North" , col = mypalette)
+```
+
+#### Manhattan South
+```{r}
+assaults_man_south <- as.vector(man_south$`Offense Description`) 
+
+assaults_man_south<- as.matrix(table(assaults_man_south))
+assaults_man_south
+
+barchart(assaults_man_south, main = "Bar Chart of Assaults in Manhattan South" , col = mypalette)
+```
+
+#### Queens North
+```{r}
+assaults_queens_north <- as.vector(queens_north$`Offense Description`) 
+
+assaults_queens_north<- as.matrix(table(assaults_queens_north))
+assaults_queens_north
+
+barchart(assaults_queens_north, main = "Bar Chart of Assaults in Queens North" , col = mypalette)
+```
+
+#### Queens South
+```{r}
+assaults_queens_south <- as.vector(queens_south$`Offense Description`) 
+
+assaults_queens_south<- as.matrix(table(assaults_queens_south))
+assaults_queens_south
+
+barchart(assaults_queens_south, main = "Bar Chart of Assaults in Queens South" , col = mypalette)
+```
+
+#### Staten Island
+```{r}
+assaults_staten_island <- as.vector(staten_island$`Offense Description`) 
+
+assaults_staten_island<- as.matrix(table(assaults_staten_island))
+assaults_staten_island
+
+barchart(assaults_staten_island, main = "Bar Chart of Assaults in Staten Island" , col = mypalette)
+```
+
+### Bias group assaulted the most in each borough
+#### Brooklyn North
+```{r}
+bias_bklyn_north <- as.vector(bklyn_north$`Bias Motive Description`) 
+
+bias_bklyn_north<- as.matrix(table(bias_bklyn_north))
+bias_bklyn_north
+
+barchart(bias_bklyn_north, main = "Bar Chart of Bias in Brooklyn North" , col = mypalette)
+```
+
+#### Brooklyn South
+```{r}
+bias_bklyn_south <- as.vector(bklyn_south$`Bias Motive Description`) 
+
+bias_bklyn_south<- as.matrix(table(bias_bklyn_south))
+bias_bklyn_south
+
+barchart(bias_bklyn_south, main = "Bar Chart of Bias in Brooklyn South" , col = mypalette)
+```
+
+#### Bronx
+```{r}
+bias_bronx <- as.vector(bronx$`Bias Motive Description`) 
+
+bias_bronx<- as.matrix(table(bias_bronx))
+bias_bronx
+
+barchart(bias_bronx, main = "Bar Chart of Bias in Bronx" , col = mypalette)
+```
+
+#### Manhattan North
+```{r}
+bias_man_north <- as.vector(man_north$`Bias Motive Description`) 
+
+bias_man_north<- as.matrix(table(bias_man_north))
+bias_man_north
+
+barchart(bias_man_north, main = "Bar Chart of Bias in Manhattan North" , col = mypalette)
+```
+
+#### Manhattan South
+```{r}
+bias_man_south <- as.vector(man_south$`Bias Motive Description`) 
+
+bias_man_south<- as.matrix(table(bias_man_south))
+bias_man_south
+
+barchart(bias_man_south, main = "Bar Chart of Bias in Manhattan South" , col = mypalette)
+```
+
+#### Queens North
+```{r}
+bias_queens_north <- as.vector(queens_north$`Bias Motive Description`) 
+
+bias_queens_north<- as.matrix(table(bias_queens_north))
+bias_queens_north
+
+barchart(bias_queens_north, main = "Bar Chart of Bias in Queens North" , col = mypalette)
+```
+
+#### Queens South
+```{r}
+bias_queens_south <- as.vector(queens_south$`Bias Motive Description`) 
+
+bias_queens_south<- as.matrix(table(bias_queens_south))
+bias_queens_south
+
+barchart(bias_queens_south, main = "Bar Chart of Bias in Queens South" , col = mypalette)
+```
+
+#### Staten Island
+```{r}
+bias_staten_island <- as.vector(staten_island$`Bias Motive Description`) 
+
+bias_staten_island<- as.matrix(table(bias_staten_island))
+bias_staten_island
+
+barchart(bias_staten_island, main = "Bar Chart of Bias in Staten Island" , col = mypalette)
+```
+
+
+ 
+
+
+
+
+
+
+
+
+
+
+
+
+
