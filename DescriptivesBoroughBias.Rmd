@@ -3,7 +3,7 @@ title: "Math 664 Project"
 output: html_notebook
 ---
 
-```{r, message=FALSE}
+```{r}
 library(readr)
 library(ggplot2)
 library(mosaic)
@@ -11,7 +11,42 @@ library(dplyr)
 library(mosaicCore)
 library(RColorBrewer)
 HateCrimes <- read_csv("NYPD_Hate_Crimes.csv")
+hate_crimes <- read_csv("NYPD_Hate_Crimes.csv")
+colnames(hate_crimes) <- c("Full.Complaint.ID", "Complaint.Year.Number", "Month.Number", "Record.Create.Date", "Complaint.Precint.Code", "Patrol.Borough.Name", "County", "Law.Code.Category.Description", "Offense.Description", "PD.Code.Description", "Bias.Motive.Description", "Arrest.Date", "Arrest.ID")
 ```
+
+```{r}
+#replace blank values with "NA"; Arrest Id and Arrest Date each have 860 NA values
+hate_crimes[hate_crimes == ""] <- NA 
+#--colSums(is.na(hate_crimes))--
+#factor some columns
+hate_crimes$Patrol.Borough.Name<-as.factor(hate_crimes$Patrol.Borough.Name)
+#turn Arrest Date into Date class 
+hate_crimes$Arrest.Date<-as.Date(hate_crimes$Arrest.Date,format="%m/%d/%Y")
+#Add another column to signify if arrested or not
+hate_crimes$ArrestStatus <- ifelse(is.na(hate_crimes$Arrest.Date), "No Arrest", "Arrested")
+
+#rename levels of boros (Patrol Borough Name)
+levels(hate_crimes$Patrol.Borough.Name)[1]<-"North Brooklyn"
+levels(hate_crimes$Patrol.Borough.Name)[2]<-"South Brooklyn"
+levels(hate_crimes$Patrol.Borough.Name)[3]<-"Bronx"
+levels(hate_crimes$Patrol.Borough.Name)[4]<-"North Manhattan"
+levels(hate_crimes$Patrol.Borough.Name)[5]<-"South Manhattan"
+levels(hate_crimes$Patrol.Borough.Name)[6]<-"North Queens"
+levels(hate_crimes$Patrol.Borough.Name)[7]<-"South Queens"
+levels(hate_crimes$Patrol.Borough.Name)[8]<-"Staten Island"
+
+```
+
+
+
+
+
+
+
+
+
+
 
 ## What Assaults are most common among each Bias/Borough Group?
 ### Bias
