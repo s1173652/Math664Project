@@ -1,0 +1,145 @@
+---
+title: "Math 664 Project: NYC Hate Crime Analysis"
+output:
+  pdf_document: default
+  html_document: default
+date: "28 April 2022"
+theme: cerulean
+---
+
+<!-- For more info on RMarkdown see http://rmarkdown.rstudio.com/ -->
+
+## Name: Brianna, Claudia, Ella (Mihaela)  
+
+### 1. Plots: 
+```{r echo=FALSE, message=FALSE,fig.align='center', out.width = "90%"}
+#load libraries
+library(lubridate)
+library(ggplot2)
+library(tidyverse)
+#load data, print out column names
+hate_crimes<-read.csv("NYPD_Hate_Crimes.csv")
+#--names(hate_crimes)--
+#replace blank values with "NA"; Arrest Id and Arrest Date each have 860 NA values
+hate_crimes[hate_crimes == ""] <- NA 
+#--colSums(is.na(hate_crimes))--
+#factor some columns
+hate_crimes$Patrol.Borough.Name<-as.factor(hate_crimes$Patrol.Borough.Name)
+#turn Arrest Date into Date class 
+hate_crimes$Arrest.Date<-as.Date(hate_crimes$Arrest.Date,format="%m/%d/%Y")
+#Add another column to signify if arrested or not
+hate_crimes$ArrestStatus <- ifelse(is.na(hate_crimes$Arrest.Date), "No Arrest", "Arrested")
+#rename levels of boros (Patrol Borough Name)
+levels(hate_crimes$Patrol.Borough.Name)[1]<-"North Brooklyn"
+levels(hate_crimes$Patrol.Borough.Name)[2]<-"South Brooklyn"
+levels(hate_crimes$Patrol.Borough.Name)[3]<-"Bronx"
+levels(hate_crimes$Patrol.Borough.Name)[4]<-"North Manhattan"
+levels(hate_crimes$Patrol.Borough.Name)[5]<-"South Manhattan"
+levels(hate_crimes$Patrol.Borough.Name)[6]<-"North Queens"
+levels(hate_crimes$Patrol.Borough.Name)[7]<-"South Queens"
+levels(hate_crimes$Patrol.Borough.Name)[8]<-"Staten Island"
+
+#Frequency of Bias Groups
+bias.table<-data.frame(table(hate_crimes$Bias.Motive.Description))
+bias.table<-bias.table[order(bias.table$Freq,decreasing=TRUE),]  
+bias.df<-as.data.frame(bias.table)
+names(bias.df)[1]<-"Bias Group"
+bias.df
+#boxplot
+boxplot(bias.df$Freq)
+#Frequency of assault groups
+offense.table<-data.frame(table(hate_crimes$Offense.Description))
+offense.table<-offense.table[order(offense.table$Freq,decreasing=TRUE),]  
+offense.df<-as.data.frame(offense.table)
+names(offense.df)[1]<-"Types of Assaults"
+offense.df
+#Frequency of hate crime groups
+hate.crime_actual.table<-data.frame(table(hate_crimes$Offense.Category))
+hate.crime_actual.table<-hate.crime_actual.table[order(hate.crime_actual.table$Freq,decreasing=TRUE),]
+hate.crime_actual<-as.data.frame(hate.crime_actual.table)
+names(hate.crime_actual)[1]<-"Types of Hate Crime"
+hate.crime_actual
+
+#count arrests by month and date - keep only 2019-2022
+hate_crimes_arrestdates<-hate_crimes%>%
+mutate(month = month(Arrest.Date), year = year(Arrest.Date)) %>%
+group_by(month, year) %>% count()%>%filter(year<2022)%>% drop_na()
+#plot arrests over 2019-2021
+ggplot(hate_crimes_arrestdates,aes(x=factor(month), y=n, group=factor(year), 
+  color=factor(year))) +geom_line(size=1.5) +labs(x="Months", y="Number of Arrests",
+                                                 color="Year") + ggtitle ("Arrests from 2019-2022") +
+  theme(plot.title = element_text(hjust = 0.5))
+
+#count arrests by boro
+hate_crimes_boroarrests<-hate_crimes%>%group_by(ArrestStatus,Patrol.Borough.Name )%>%count()
+#plot arrests by boro (stacked bar & percent stacked bar)
+ggplot(hate_crimes_boroarrests, aes(fill=ArrestStatus, y=n, x=Patrol.Borough.Name)) + 
+  geom_bar(position="fill", stat="identity") +labs(x="Boro",
+                                                    y="Proportion of Arrests/Non-Arrests",
+                                                    fill="Arrest Status") +
+                                                    ggtitle("Arrest Status Per Boro") +
+  theme(plot.title = element_text(hjust = 0.5)) + coord_flip()
+
+#count arrests by assault type
+hate_crimes_offensearrests<-hate_crimes%>%group_by(ArrestStatus,Offense.Description)%>%count()
+hate_crimes_offensearrests_2<-hate_crimes%>%group_by(Offense.Description,ArrestStatus)%>%count()
+hate_crimes_offensearrests_2<-hate_crimes_offensearrests_2%>%filter(Offense.Description %in% c("CRIMINAL MISCHIEF & RELATED OF", "MISCELLANEOUS PENAL LAW"," ASSAULT 3 & RELATED OFFENSES","OFF. AGNST PUB ORD SENSBLTY &","FELONY ASSAULT","ROBBERY"))
+hate_crimes_offensearrests<-arrange(hate_crimes_offensearrests,Offense.Description,n)
+#plot arrests by assault type
+ggplot(hate_crimes_offensearrests, aes(fill=ArrestStatus, y=n, x=Offense.Description)) + 
+  geom_bar(position="fill", stat="identity") +labs(x="Assault Description",
+                                                    y="Proportion of Arrests/Non-Arrests",
+                                                    fill="Arrest Status") +
+                                                    ggtitle("Arrest Status by Type of Assault") + coord_flip()
+  
+
+#count arrests by hate crime
+hate_crimes_arrest_2<-hate_crimes%>%group_by(Offense.Category,ArrestStatus)%>%count()
+#plot arrests by offense type
+ggplot(hate_crimes_arrest_2, aes(fill=ArrestStatus, y=n, x=Offense.Category)) + 
+  geom_bar(position="fill", stat="identity") +labs(x="Hate Crime",
+                                                    y="Proportion of Arrests/Non-Arrests",
+                                                    fill="Arrest Status") +
+                                                    ggtitle("Arrest Status Per Hate Crime") + coord_flip()
+```
+\newpage
+```{r echo=FALSE, message=FALSE,fig.align='center', fig.width=7}
+
+#count of assault by bias group
+hate_crimes_biasoffense<-hate_crimes%>%group_by(Offense.Description,Bias.Motive.Description)%>%
+  count()%>%filter(Bias.Motive.Description %in% c("ANTI-JEWISH", "ANTI-ASIAN","ANTI-MALE HOMOSEXUAL (GAY)","ANTI-BLACK","ANTI-WHITE"))
+hate_crimes_biasoffense
+#plot assaults per group
+ggplot(hate_crimes_biasoffense, aes(fill=Bias.Motive.Description, y=n, x=Offense.Description)) + 
+  geom_bar(position="fill", stat="identity") +labs(x="Assault",
+                                                    y="Bias Group Proportion",
+                                                    fill="Bias Group") +
+                                                    ggtitle("Assault Types by Bias Group") + coord_flip()
+
+#count of hate crime by bias group
+hate_crimes_biasgroup<-hate_crimes%>%group_by(Offense.Category,Bias.Motive.Description)%>%
+  count()%>%filter(Bias.Motive.Description %in% c("ANTI-JEWISH", "ANTI-ASIAN","ANTI-MALE HOMOSEXUAL (GAY)","ANTI-BLACK","ANTI-WHITE"))
+hate_crimes_biasgroup
+#plot assaults per group
+ggplot(hate_crimes_biasgroup, aes(fill=Bias.Motive.Description, y=n, x=Offense.Category)) + 
+  geom_bar(position="fill", stat="identity") +labs(x="Hate Crimes",
+                                                    y="Bias Group Proportion",
+                                                    fill="Bias Group") +
+                                                    ggtitle("Hate Crimes by Bias Group") + coord_flip()
+```
+
+```{r echo=FALSE}
+top5_bias<-hate_crimes%>%filter(Bias.Motive.Description %in% c("ANTI-JEWISH", "ANTI-ASIAN","ANTI-MALE HOMOSEXUAL (GAY)","ANTI-BLACK","ANTI-WHITE"))
+ct_hatecrime.bias<-table(top5_bias$Bias.Motive.Description,top5_bias$Offense.Category)
+ct_hatecrime.bias
+chisq.test(ct_hatecrime.bias)
+
+
+
+top5_assaults<-hate_crimes%>%filter(Offense.Description %in% c("CRIMINAL MISCHIEF & RELATED OF","MISCELLANEOUS PENAL LAW","ASSAULT 3 & RELATED OFFENSES","OFF. AGNST PUB ORD SENSBLTY &","FELONY ASSAULT"))
+ct_hatecrime.assault<-table(top5_assaults$Offense.Description,top5_assaults$Offense.Category)
+ct_hatecrime.assault
+chisq.test(ct_hatecrime.assault)
+
+```
+
