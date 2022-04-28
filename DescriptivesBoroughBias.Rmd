@@ -529,7 +529,7 @@ bias_staten_island
 barchart(bias_staten_island, main = "Bar Chart of Bias in Staten Island" , col = "cadetblue2")
 ```
  
-
+ 
   
 
 
